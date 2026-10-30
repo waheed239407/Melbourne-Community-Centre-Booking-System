@@ -1,0 +1,9 @@
+{
+  "name": "melbourne-community-centre-booking-system",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "test": "node --test",
+    "lint": "echo 'Linting will be enabled when application source is added'"
+  }
+}
