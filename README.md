@@ -20,7 +20,7 @@ All event listings are free to submit. Staff review them before publication. No 
 
 ## What is working in the source
 
-The project contains implementation code for registration, verification, login, booking creation, availability checks, cancellation, staff decisions, room blocks and free event submissions. PostgreSQL transactions and role checks protect important actions. **Automated unit tests pass locally.** New end-to-end booking and promotion flows still require the live PostgreSQL smoke test on your laptop before being reported as verified.
+The project contains implementation code for registration, verification, login, booking creation, availability checks, cancellation, staff decisions, room blocks and free event submissions. PostgreSQL transactions and role checks protect important actions. **Verification status (24 November 2026):** GitHub Actions passed 25 backend unit tests, the frontend production build, the high-severity production dependency audit, and a live PostgreSQL integration job. The integration job executes booking, staff-decision and promotion tests, plus a separate six-check account-registration and verification test. See `docs/task3-verified-test-evidence.md` and the linked GitHub Actions run. A 3–5 minute recording of the team's own application demonstration is still required for the course submission.
 
 ## Install on Windows in five steps
 
