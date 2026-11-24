@@ -1,49 +1,102 @@
-name: MCCBS CI
+name: Task 3 checks
 
 on:
   push:
-    branches: [main]
+    branches: [main, 'feature/**', 'fix/**']
   pull_request:
-    branches: [main]
 
 jobs:
-  test:
+  backend-unit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install backend dependencies
+        working-directory: backend
+        run: npm ci || npm install
+      - name: Run unit tests
+        working-directory: backend
+        run: npm test
+      - name: Check production dependency vulnerabilities
+        working-directory: backend
+        run: npm audit --omit=dev --audit-level=high
+
+  frontend-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: npm ci || npm install
+      - name: Build frontend
+        working-directory: frontend
+        run: npm run build
+
+  full-stack-integration:
     runs-on: ubuntu-latest
     services:
       postgres:
         image: postgres:18
         env:
-          POSTGRES_USER: mccbs
-          POSTGRES_PASSWORD: mccbs_test
-          POSTGRES_DB: mccbs_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: task3_ci_password
+          POSTGRES_DB: mccbs_task3
         ports:
           - 5432:5432
         options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
+          --health-cmd "pg_isready -U postgres -d mccbs_task3"
+          --health-interval 5s
           --health-timeout 5s
-          --health-retries 5
-
+          --health-retries 15
+    env:
+      PGHOST: 127.0.0.1
+      PGPORT: '5432'
+      PGDATABASE: mccbs_task3
+      PGUSER: postgres
+      PGPASSWORD: task3_ci_password
+      JWT_SECRET: task3_ci_only_secret_random_32_character_minimum_value
+      DEMO_PASSWORD: task3_ci_only_demonstration_password
+      NODE_ENV: development
+      PORT: '3001'
+      CORS_ORIGIN: http://localhost:5173
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: 26
-          cache: npm
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Apply database schema
+          node-version: '22'
+      - name: Install backend dependencies
+        working-directory: backend
+        run: npm ci || npm install
+      - name: Apply PostgreSQL schema
         env:
-          PGPASSWORD: mccbs_test
-        run: psql -h localhost -U mccbs -d mccbs_test -f db/schema.sql
-
-      - name: Run lint checks
-        run: npm run lint --if-present
-
-      - name: Run automated tests
-        run: npm test --if-present
+          PGPASSWORD: task3_ci_password
+        run: psql -h 127.0.0.1 -U postgres -d mccbs_task3 -v ON_ERROR_STOP=1 -f database/schema.sql
+      - name: Seed demo data
+        working-directory: backend
+        run: npm run seed
+      - name: Run live API and database tests
+        working-directory: backend
+        shell: bash
+        run: |
+          node server.js > /tmp/mccbs-task3-server.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          ready=0
+          for i in $(seq 1 30); do
+            if curl --fail --silent http://localhost:3001/api/health >/dev/null; then
+              ready=1
+              break
+            fi
+            sleep 1
+          done
+          if [ "$ready" != 1 ]; then
+            cat /tmp/mccbs-task3-server.log
+            exit 1
+          fi
+          npm run smoke
+          node test/verify.integration.js
