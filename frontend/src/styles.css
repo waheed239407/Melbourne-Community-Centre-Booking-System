@@ -383,3 +383,5 @@ sup { line-height: 0; }
 .account-panel dt { color: var(--muted); font-size: 13px; }
 .account-panel dd { margin: 0; font-size: 14px; overflow-wrap: anywhere; text-align: right; }
 .account-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; margin-top: 24px; gap: 16px; }
+.product-preview { margin: 0; }
+.product-preview img { width: 100%; height: auto; display: block; object-fit: contain; border-bottom: 1px solid var(--line); }
