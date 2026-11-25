@@ -368,7 +368,7 @@ sup { line-height: 0; }
   .panel { padding: 19px; }
 }
 @media (pointer: coarse) {
-  .primary,.secondary,.nav,.text-danger,.text-link,.text-back,.text-close,.mobile-bottom-nav button,.sort-button,.review-actions button { min-height: 44px; }
+  .primary,.secondary,.nav,.brand-link,.text-on-dark,.text-danger,.text-link,.text-back,.text-close,.mobile-bottom-nav button,.sort-button,.review-actions button { min-height: 44px; }
   input,select,textarea { font-size: 16px; }
 }
 @media (prefers-reduced-motion: reduce) {
