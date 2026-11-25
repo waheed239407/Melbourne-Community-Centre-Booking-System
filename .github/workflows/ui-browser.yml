@@ -1,0 +1,84 @@
+name: MCCBS browser UI checks
+
+on:
+  push:
+    branches: ['ui/ux-overhaul']
+  pull_request:
+    paths:
+      - 'frontend/**'
+      - '.github/workflows/ui-browser.yml'
+
+jobs:
+  browser-ui:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_DB: mccbs_task3
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: ci_ui_only_password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d mccbs_task3"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+    env:
+      PGHOST: localhost
+      PGPORT: '5432'
+      PGDATABASE: mccbs_task3
+      PGUSER: postgres
+      PGPASSWORD: ci_ui_only_password
+      JWT_SECRET: ui_e2e_ci_only_secret_with_at_least_32_characters
+      DEMO_PASSWORD: ci_ui_demo_password_change_in_live_environment
+      PORT: '3001'
+      CORS_ORIGIN: http://localhost:5173
+      NODE_ENV: development
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install application and browser-test packages
+        run: |
+          npm --prefix backend install
+          npm --prefix frontend install
+          npm --prefix frontend install --no-save @playwright/test
+      - name: Install Chromium for Playwright
+        working-directory: frontend
+        run: npx playwright install --with-deps chromium
+      - name: Initialise isolated PostgreSQL test database
+        run: psql -h localhost -U postgres -d mccbs_task3 -v ON_ERROR_STOP=1 -f database/schema.sql
+      - name: Seed sample rooms and accounts
+        working-directory: backend
+        run: npm run seed
+      - name: Start Express and Vite, wait for readiness
+        shell: bash
+        run: |
+          (cd backend && node server.js) > /tmp/mccbs-backend-ui.log 2>&1 &
+          (cd frontend && ./node_modules/.bin/vite --host localhost) > /tmp/mccbs-frontend-ui.log 2>&1 &
+          for i in $(seq 1 40); do
+            if curl --fail --silent http://localhost:3001/api/health >/dev/null &&
+               curl --fail --silent http://localhost:5173/ >/dev/null; then
+              echo "Frontend, Express API and PostgreSQL are reachable."
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/mccbs-backend-ui.log
+          cat /tmp/mccbs-frontend-ui.log
+          exit 1
+      - name: Run real Chromium UI workflows and responsive checks
+        working-directory: frontend
+        run: npx playwright test e2e/ui-workflows.spec.cjs --workers=1 --reporter=line
+      - name: Publish browser screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mccbs-browser-ui-screenshots
+          path: frontend/test-results/screenshots/
+          if-no-files-found: ignore
+          retention-days: 7
