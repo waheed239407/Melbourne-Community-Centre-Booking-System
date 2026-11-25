@@ -180,7 +180,7 @@ textarea { min-height: 114px; resize: vertical; }
 .table-count { margin-left: auto; font-size: 12px; color: var(--muted); }
 .booking-table-scroll { max-height: 510px; overflow: auto; border: 1px solid var(--line); border-radius: 7px; }
 .booking-table { border-collapse: separate; border-spacing: 0; width: 100%; min-width: 730px; }
-.booking-table th,.booking-table td { font-size: 13px; text-align: left; padding: 10px 15px; min-height: var(--row-height); height: var(--row-height); vertical-align: middle; border-bottom: 1px solid var(--line); background: #fff; }
+.booking-table th,.booking-table td { font-size: 13px; text-align: left; padding: 0 15px; height: var(--row-height); vertical-align: middle; border-bottom: 1px solid var(--line); background: #fff; }
 .booking-table thead th { background: var(--surface-soft); font-size: 12px; font-weight: 700; position: sticky; top: 0; z-index: 2; white-space: nowrap; }
 .booking-table tbody tr:hover th,.booking-table tbody tr:hover td,.booking-table tbody tr:focus-within th,.booking-table tbody tr:focus-within td { background: #f5faf7; }
 .booking-table thead th:first-child { left: 0; z-index: 4; }
