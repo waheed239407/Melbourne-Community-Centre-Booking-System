@@ -18,7 +18,7 @@ async function signOut(page) {
 
 test('desktop homepage and navigation preserve task focus', async ({ page }) => {
   await page.setViewportSize({width:1440,height:900})
-  await page.goto('/')
+  await page.goto('http://localhost:5173/')
   await expect(page.getByRole('heading',{name:'Find and request community rooms in Melbourne.'})).toBeVisible()
   await expect(page.getByRole('button',{name:'Find an available space'})).toBeVisible()
   await page.screenshot({ path:'test-results/screenshots/desktop-home.png', fullPage:true })
@@ -32,7 +32,7 @@ test('desktop homepage and navigation preserve task focus', async ({ page }) => 
 
 test('community member submits booking and staff approves it', async ({ page }) => {
   await page.setViewportSize({width:1440,height:900})
-  await page.goto('/')
+  await page.goto('http://localhost:5173/')
   await signIn(page,customer)
   await expect(page.getByRole('heading',{name:'Find a community space'})).toBeVisible()
   await expect(page.locator('.room-card')).toHaveCount(3)
@@ -54,7 +54,7 @@ test('community member submits booking and staff approves it', async ({ page }) 
 
 test('community event promotion requires staff review', async ({ page }) => {
   await page.setViewportSize({width:1440,height:900})
-  await page.goto('/')
+  await page.goto('http://localhost:5173/')
   await signIn(page,customer)
   await page.locator('.desktop-navigation').getByRole('button',{name:'Community events'}).click()
   const unique='MCCBS browser test workshop '+Date.now()
@@ -78,7 +78,7 @@ test('community event promotion requires staff review', async ({ page }) => {
 for (const width of [375,768]) {
   test('responsive navigation and no horizontal overflow at '+width+'px',async({page})=>{
     await page.setViewportSize({width,height:812})
-    await page.goto('/')
+    await page.goto('http://localhost:5173/')
     await expect(page.getByRole('heading',{name:'Find and request community rooms in Melbourne.'})).toBeVisible()
     await expect(page.locator('.mobile-bottom-nav')).toBeVisible()
     const number=await page.locator('.mobile-bottom-nav button').count()
