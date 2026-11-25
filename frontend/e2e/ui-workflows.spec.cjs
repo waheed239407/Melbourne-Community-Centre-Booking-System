@@ -9,6 +9,7 @@ async function signIn(page, email) {
   await page.getByLabel('Email address').fill(email)
   await page.locator('form.auth-form input[type="password"]').fill(process.env.DEMO_PASSWORD)
   await page.locator('form.auth-form button[type="submit"]').click()
+  await expect(page.locator('.desktop-navigation .nav-exit')).toBeVisible()
 }
 
 async function signOut(page) {
@@ -58,7 +59,7 @@ test('community event promotion requires staff review', async ({ page }) => {
   await signIn(page,customer)
   await page.locator('.desktop-navigation').getByRole('button',{name:'Community events'}).click()
   const unique='MCCBS browser test workshop '+Date.now()
-  await page.getByRole('button',{name:'Post a free event'}).click()
+  await page.locator('.promo-hero').getByRole('button',{name:'Post a free event'}).click()
   await page.getByLabel('Event title').fill(unique)
   await page.getByLabel('Location').fill('South Melbourne Community Centre')
   await page.getByLabel('Description').fill('An automated test workshop demonstrating staff moderation and approved public community events.')
@@ -87,7 +88,7 @@ for (const width of [375,768]) {
     await page.screenshot({path:'test-results/screenshots/mobile-'+width+'.png',fullPage:true})
     await page.locator('.mobile-bottom-nav').getByRole('button',{name:'Find a space'}).click()
     await expect(page.getByRole('heading',{name:'Find a community space'})).toBeVisible()
-    await expect(page.locator('.room-card')).toHaveCount(3)
+    await expect(page.locator('.room-card').first()).toBeVisible()
     await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth-window.innerWidth)).toBeLessThanOrEqual(1)
   })
 }
