@@ -133,7 +133,12 @@ function LoginView({mode = 'login',onLogin,onRegister,onVerify,onResend,setView}
       {screen !== 'verify' && <div className="auth-switch" role="group" aria-label="Account options">
         {['login','register'].map(key => <button key={key} type="button" className={screen===key?'selected':''} aria-pressed={screen===key} data-text={key==='login'?'Sign in':'Create account'} onClick={()=>changeScreen(key)}><span>{key==='login'?'Sign in':'Create account'}</span></button>)}
       </div>}
-      <form onSubmit={submit} className="auth-form">
+      {(screen==='register'||screen==='verify') && <div className="account-stepper" aria-label="Account creation progress">
+        <span className={screen==='register'?'current':'completed'} aria-current={screen==='register'?'step':undefined}>Account details</span>
+        <i aria-hidden="true"/>
+        <span className={screen==='verify'?'current':''} aria-current={screen==='verify'?'step':undefined}>Verify email</span>
+      </div>}
+      <form key={screen} onSubmit={submit} className={`auth-form screen-${screen}`}>
         {screen==='register' && <div className="two-inputs"><label>First name<input autoComplete="given-name" value={firstName} onChange={e=>setFirstName(e.target.value)} required/></label><label>Last name<input autoComplete="family-name" value={lastName} onChange={e=>setLastName(e.target.value)} required/></label></div>}
         {screen!=='verify' && <><label>Email address<input type="email" inputMode="email" autoComplete="email" value={email} onChange={e=>setEmail(e.target.value)} required placeholder="you@example.com"/></label>
         <label>Password<div className="password-field"><input type={showPassword?'text':'password'} autoComplete={screen==='login'?'current-password':'new-password'} value={password} onChange={e=>setPassword(e.target.value)} minLength={screen==='register'?10:1} required placeholder={screen==='register'?'At least 10 characters':'Enter your password'}/><button type="button" onClick={()=>setShowPassword(!showPassword)} aria-label={showPassword?'Hide password':'Show password'}>{showPassword?'Hide':'Show'}</button></div></label></>}
