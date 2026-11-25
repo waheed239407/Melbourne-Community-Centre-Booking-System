@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import BookingTable, { BookingStatus } from './components/BookingTable'
 import { RoomSkeleton, TableSkeleton } from './components/Skeleton'
 import VerificationCode from './components/VerificationCode'
+import dashboardScreenshot from './assets/staff-booking-dashboard.svg'
 import './styles.css'
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:3001'
@@ -63,15 +64,10 @@ function HomeView({setView}) {
           <div className="hero-actions"><button className="primary" onClick={() => setView('search')}>Find an available space</button><button className="text-on-dark" onClick={() => setView('promotions')}>Browse community events <span aria-hidden="true">→</span></button></div>
           <p className="hero-disclaimer">Student prototype. Not an official council booking service.</p>
         </div>
-        <div className="product-preview" aria-label="Preview of MCCBS booking workflow">
-          <div className="product-preview-top"><span className="preview-brand">MCCBS</span><span>Booking workspace</span></div>
-          <div className="preview-content"><div className="preview-heading"><strong>My booking requests</strong><span>Example interface</span></div>
-            <div className="preview-row"><div><strong>Banksia Room</strong><small>South Melbourne · 12 Dec, 6:00 pm</small></div><span className="status warn">Pending</span></div>
-            <div className="preview-row"><div><strong>Yarra Hall</strong><small>Port Melbourne · 18 Dec, 10:00 am</small></div><span className="status ok">Approved</span></div>
-            <div className="preview-note"><strong>Staff review</strong><p>Each request is checked before confirmation. Booking status is saved in PostgreSQL.</p></div>
-          </div>
-          <div className="preview-annotations" aria-label="Product features"><span>Room and date</span><span>Clear status</span><span>Staff decision</span></div>
-        </div>
+        <figure className="product-preview"><div className="product-preview-top"><span className="preview-brand">MCCBS</span><span>Working prototype screenshot</span></div>
+          <img src={dashboardScreenshot} alt="Actual MCCBS staff booking dashboard showing one approved Yarra Hall booking and zero pending requests."/>
+          <figcaption className="preview-annotations"><span>1. Staff booking list</span><span>2. Status summary</span><span>3. Approval result</span></figcaption>
+        </figure>
       </div>
     </section>
     <section className="home-below page" aria-labelledby="process-heading">
