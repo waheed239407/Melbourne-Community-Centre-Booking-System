@@ -7,7 +7,7 @@ async function signIn(page, email) {
   await page.locator('.desktop-navigation .nav-account').click()
   await expect(page.getByRole('heading', { name: 'Sign in' })).toBeVisible()
   await page.getByLabel('Email address').fill(email)
-  await page.getByLabel('Password', { exact: true }).fill(process.env.DEMO_PASSWORD)
+  await page.locator('form.auth-form input[type="password"]').fill(process.env.DEMO_PASSWORD)
   await page.locator('form.auth-form button[type="submit"]').click()
 }
 
