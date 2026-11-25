@@ -25,7 +25,7 @@ button,input,select,textarea { font: inherit; }
 button { cursor: pointer; }
 a { color: inherit; text-underline-offset: .2em; }
 main { min-height: 44vh; }
-p { line-height: 1.65; hyphens: auto; }
+p { line-height: 1.65; overflow-wrap: break-word; }
 h1,h2,h3 { color: inherit; letter-spacing: -.035em; line-height: 1.16; overflow-wrap: anywhere; }
 h1 { font-size: clamp(1.75rem,1rem + 3vw,3rem); margin: 0 0 14px; }
 h2 { font-size: clamp(1.45rem,1.1rem + 1.6vw,2rem); margin: 0 0 12px; }
