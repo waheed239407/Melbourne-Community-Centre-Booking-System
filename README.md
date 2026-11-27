@@ -20,7 +20,7 @@ All event listings are free to submit. Staff review them before publication. No 
 
 ## What is working in the source
 
-The project contains implementation code for registration, verification, login, booking creation, availability checks, cancellation, staff decisions, room blocks and free event submissions. PostgreSQL transactions and role checks protect important actions. **Verification status (24 November 2026):** GitHub Actions passed 25 backend unit tests, the frontend production build, the high-severity production dependency audit, and a live PostgreSQL integration job. The integration job executes booking, staff-decision and promotion tests, plus a separate six-check account-registration and verification test. See `docs/task3-verified-test-evidence.md` and the linked GitHub Actions run. A 3–5 minute recording of the team's own application demonstration is still required for the course submission.
+The project contains implementation code for registration, verification, login, booking creation, availability checks, cancellation, staff decisions, room blocks and free event submissions. PostgreSQL transactions and role checks protect important actions. **Verification status (24 November 2026):** GitHub Actions passed 25 backend unit tests, the frontend production build, the high-severity production dependency audit, and a live PostgreSQL integration job. The integration job executes booking, staff-decision and promotion tests, plus a separate six-check account-registration and verification test. See `docs/task3-verified-test-evidence.md` and the linked GitHub Actions run. A demonstration MP4 has been supplied separately for assessment. Confirm its duration and content against the course requirements before submission.
 
 ## Install on Windows in five steps
 
@@ -117,4 +117,8 @@ Run `npm run build` from `frontend` to check a production React build. A local b
 
 ## GitHub collaboration
 
-Work on `feature/task3-core-implementation`. Keep code reviews and commit evidence genuine. Add the Week 5–6 meeting records and the 3–5 minute working walkthrough before the final Task 3 submission. Do not commit your `.env` file, passwords or `node_modules` folders.
+Work on `feature/task3-core-implementation`. Keep code reviews and commit evidence genuine. Attach the confirmed Week 5–6 meeting records and the demonstration MP4 to the final Task 3 submission. Do not commit your `.env` file, passwords or `node_modules` folders.
+
+## Task 3 submission evidence register
+
+See [implementation evidence and sprint status](docs/task3-submission-evidence-register.md) for architecture mapping, acceptance scenarios, sprint issue references and remaining verification. Independent peer review and member-specific contribution evidence remain separate acceptance requirements.
